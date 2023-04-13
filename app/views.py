@@ -35,6 +35,7 @@ def display_webpage(request):
     LOW=Webpage.objects.filter(name__regex='[a-zA-Z]{7}')
     LOW=Webpage.objects.filter(Q(topic_name='cricket')&Q(name='virat'))
     LOW=Webpage.objects.filter(Q(topic_name='Foot Ball'))
+    LOW=Webpage.objects.all()
 
     d={'webpage':LOW}
     return render(request,'display_webpage.html',context=d)
@@ -61,3 +62,20 @@ def display_accessrecord(request):
     
     d={'accessrecord':LOA}
     return render(request,'display_accessrecord.html',context=d)
+
+def update_webpage(request):
+    Webpage.objects.filter(name='dhoni').update(url='https://dhoni.com')
+    Webpage.objects.filter(topic_name='cricket').update(url='https://dhoni.com')
+    Webpage.objects.filter(name='dineesh').update(topic_name='Hockey')
+    Webpage.objects.update_or_create(name='sharma',defaults={'url':'https://sharma.com'})
+    Webpage.objects.update_or_create(url='http://MSD.in',defaults={'name':'MSD'})
+    TO=Topic.objects.get_or_create(topic_name='cricket')[0]
+    TO.save()
+    Webpage.objects.update_or_create(name='pandya',defaults={'topic_name':TO,'url':'http://pandya.com'})
+    d={'webpages':Webpage.objects.all()}
+    return render(request,'display_webpage.html',d)
+def delete_webpage(request):
+    Webpage.objects.filter(name='kohli').delete()
+    Webpage.objects.all().delete()
+    d={'webpages':Webpage.objects.all()}
+    return render(request,'display_webpage.html',d)
